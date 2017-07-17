@@ -73,6 +73,9 @@ dependencies {
         exclude module: 'kotlin-reflect'
     }
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_version"
+
+    // for filter and listener
+    compile "javax.servlet:javax.servlet-api:$servlet_version"
 }
 
 compileKotlin {
