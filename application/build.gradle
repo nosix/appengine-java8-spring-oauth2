@@ -1,0 +1,99 @@
+group 'org.musyozoku'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.1.3-2'
+    ext.appengine_version = '1.9.54'
+    ext.appengine_plugin_version = '1.3.2'
+    ext.spring_version = '1.5.3.RELEASE'
+    ext.spring_oauth_version = '2.1.1.RELEASE'
+    ext.servlet_version = '3.1.0'
+    ext.jackson_version = '2.8.4'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        // Kotlin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // Google App Engine + Spring
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+        classpath "com.google.cloud.tools:appengine-gradle-plugin:$appengine_plugin_version"
+        // see: https://github.com/GoogleCloudPlatform/app-gradle-plugin
+    }
+}
+
+apply plugin: 'java'
+
+// Kotlin
+apply plugin: 'kotlin'
+
+// Google App Engine + Spring
+apply plugin: 'kotlin-spring'
+apply plugin: 'war'
+apply plugin: 'com.google.cloud.tools.appengine'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+    // Google App Engine
+    compile "com.google.appengine:appengine-api-1.0-sdk:$appengine_version"
+    compile("org.springframework.boot:spring-boot-starter-web:$spring_version") {
+        exclude module: 'jul-to-slf4j'
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+
+    // OAuth2 (Security)
+    compile("org.springframework.boot:spring-boot-starter-security:$spring_version") {
+        exclude module: 'jul-to-slf4j'
+    }
+    compile "org.springframework.security.oauth:spring-security-oauth2:$spring_oauth_version"
+
+    // Template Engine (Thymeleaf)
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf:$spring_version") {
+        exclude module: 'tomcat-embed-core'
+        exclude module: 'tomcat-embed-el'
+        exclude module: 'tomcat-embed-websocket'
+        exclude module: 'groovy'
+        exclude module: 'jul-to-slf4j'
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+
+    // JSON Object Mapper
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version") {
+        exclude module: 'kotlin-reflect'
+    }
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_version"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+appengine {
+
+    //noinspection GroovyAssignabilityCheck
+    run {      // local (dev_appserver) configuration (standard environments only)
+        port = 8080                 // default
+
+        // for Remote Debugger
+        jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005']
+    }
+
+    deploy {   // deploy configuration
+        stopPreviousVersion = true  // default - stop the current version
+        promote = true              // default - & make this the current version
+    }
+}

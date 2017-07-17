@@ -1,0 +1,17 @@
+# see: http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+
+security:
+  oauth2:
+    client:
+      # see: https://developers.google.com/identity/protocols/OpenIDConnect#authenticationuriparameters
+      clientId: [your clientId].apps.googleusercontent.com # TODO: change this
+      clientSecret: [your clientSecret] # TODO: change this
+      accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+      clientAuthenticationScheme: form
+      scope:
+        - openid
+        - email
+        - profile
+    resource:
+      userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
