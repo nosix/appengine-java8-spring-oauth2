@@ -2,7 +2,7 @@ group 'org.musyozoku'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.3-2'
+    ext.kotlin_version = '1.1.51'
     ext.appengine_version = '1.9.54'
     ext.appengine_plugin_version = '1.3.2'
     ext.spring_version = '1.5.3.RELEASE'
