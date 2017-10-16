@@ -57,6 +57,7 @@ dependencies {
         exclude module: 'jul-to-slf4j'
     }
     compile "org.springframework.security.oauth:spring-security-oauth2:$spring_oauth_version"
+    compile "org.springframework.session:spring-session:+"
 
     // Template Engine (Thymeleaf)
     compile("org.springframework.boot:spring-boot-starter-thymeleaf:$spring_version") {
