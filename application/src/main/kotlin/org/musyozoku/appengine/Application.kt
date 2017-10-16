@@ -1,9 +1,11 @@
 package org.musyozoku.appengine
 
+import com.google.appengine.api.datastore.DatastoreService
+import com.google.appengine.api.datastore.DatastoreServiceFactory
 import com.google.appengine.api.memcache.MemcacheService
 import com.google.appengine.api.memcache.MemcacheServiceFactory
 import org.musyozoku.appengine.mapper.json.JsonObjectMapper
-import org.musyozoku.appengine.session.MemcacheSessionRepository
+import org.musyozoku.appengine.session.DatastoreSessionRepository
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.web.support.SpringBootServletInitializer
@@ -49,8 +51,12 @@ class Application : SpringBootServletInitializer() {
             MemcacheServiceFactory.getMemcacheService()
 
     @Bean
-    fun springSessionRepositoryFilter(memcacheSessionRepository: MemcacheSessionRepository) =
-            SessionRepositoryFilter(memcacheSessionRepository)
+    fun datastoreService(): DatastoreService =
+            DatastoreServiceFactory.getDatastoreService()
+
+    @Bean
+    fun springSessionRepositoryFilter(sessionRepository: DatastoreSessionRepository) =
+            SessionRepositoryFilter(sessionRepository)
 }
 
 fun main(args: Array<String>) {
