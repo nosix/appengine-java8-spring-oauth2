@@ -1,6 +1,8 @@
 # appengine-java8-spring-oauth2
 Google App Engine Java8 Standard Environment + Spring Boot + OAuth2 + Kotlin
 
+## Issue
+
 This sample works in the local environment, but it does not work in the App Engine environment.
 
 The following error occurs in the App Engine environment:
@@ -85,3 +87,20 @@ org.musyozoku.appengine.listener.RequestListener requestDestroyed: end /login (R
 ```
 
 (`foo = bar` is session data saved by other processing.)
+
+## How to solve the issue
+
+Add Spring Session and custom SessionRepository.
+And disable AppEngine session in `appengine-web.xml`.
+
+This solution was taught in the following:
+https://github.com/int128/gradleupdate/commit/2405310dd0da4e19cf4d4b55a16f8466c1d62cc8
+
+This project contains two types of SessionRepository.
+
+- MemcacheSessionRepository
+    - Session data may disappear?
+         - [Memcache Overview](https://cloud.google.com/appengine/docs/standard/java/memcache/)
+             > Memcache can be useful for other temporary values. However, when considering whether to store a value solely in the memcache and not backed by other persistent storage, be sure that your application behaves acceptably when the value is suddenly not available. Values can expire from the memcache at any time, and can be expired prior to the expiration deadline set for the value. For example, if the sudden absence of a user's session data would cause the session to malfunction, that data should probably be stored in the datastore in addition to the memcache.
+- DatastoreSessionRepository
+    - It serialize session data. There is a limitation of Blob.
