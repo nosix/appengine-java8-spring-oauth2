@@ -27,6 +27,8 @@ class DatastoreSessionRepository(private val datastoreService: DatastoreService)
                 outStream.writeObject(session)
             }
             datastoreService.put(Entity(kind, session.id).apply {
+                // TODO: Check byteArray size. This byte array can be no bigger than 1MB.
+                // https://cloud.google.com/appengine/docs/standard/java/javadoc/com/google/appengine/api/datastore/Blob
                 setProperty(propertyName, Blob(byteArray.toByteArray()))
             })
         }
